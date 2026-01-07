@@ -4,7 +4,7 @@ import { postServices } from "./post.service";
 const createPost = async (req: Request, res: Response) => {
     try {
         const user = req.user;
-        if(!user){
+        if (!user) {
             return res.status(400).json({
                 error: "Unauthorized"
             })
@@ -21,6 +21,21 @@ const createPost = async (req: Request, res: Response) => {
     }
 }
 
+const getAllPost = async (req: Request, res: Response) => {
+    try {
+        const { search } = req.query;
+        const searchText = typeof search === 'string' ? search : undefined
+        const result = await postServices.getAllPost(searchText);
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(400).json({
+            error: "Post creation failed",
+            details: error
+        })
+    }
+}
+
 export const postController = {
-    createPost
+    createPost,
+    getAllPost
 }
